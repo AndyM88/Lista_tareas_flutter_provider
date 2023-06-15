@@ -46,44 +46,36 @@ class TareaController with ChangeNotifier {
       TareaModel(
           nombre: 'Tarea 1',
           descripcion: 'Descripción de la tarea 1',
-          color: const Color(0xffFF0000),
-          estado: 0),
+          color: const Color(0xffFF0000)),
       TareaModel(
           nombre: 'Tarea 2',
           descripcion: 'Descripción de la tarea 2',
-          color: const Color(0xff00FF00),
-          estado: 0),
+          color: const Color(0xff00FF00)),
       TareaModel(
           nombre: 'Tarea 3',
           descripcion: 'Descripción de la tarea 3',
-          color: const Color(0xff0000FF),
-          estado: 0),
+          color: const Color(0xff0000FF)),
       TareaModel(
           nombre: 'Tarea 4',
           descripcion: 'Descripción de la tarea 4',
-          color: const Color(0xffFFFF00),
-          estado: 0),
+          color: const Color(0xffFFFF00)),
       TareaModel(
           nombre: 'Tarea 5',
           descripcion: 'Descripción de la tarea 5',
-          color: const Color(0xff00FFFF),
-          estado: 0),
+          color: const Color(0xff00FFFF)),
       TareaModel(
           nombre: 'Tarea 6',
           descripcion: 'Descripción de la tarea 6',
-          color: const Color(0xffFF00FF),
-          estado: 0),
+          color: const Color(0xffFF00FF)),
       //agrégale más datos de prueba
       TareaModel(
           nombre: 'Tarea 7',
           descripcion: 'Descripción de la tarea 7',
-          color: const Color(0xffFF0000),
-          estado: 0),
+          color: const Color(0xffFF0000)),
       TareaModel(
           nombre: 'Tarea 8',
           descripcion: 'Descripción de la tarea 8',
-          color: const Color(0xff00FF00),
-          estado: 0),
+          color: const Color(0xff00FF00)),
     ];
     _tareasOriginales = _tareas;
   }
