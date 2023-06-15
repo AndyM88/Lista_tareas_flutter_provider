@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lista_tareas/Models/tarea_model.dart';
+import 'package:lista_tareas/Pages/vista_cuadricula_page.dart';
+import 'package:lista_tareas/Pages/vista_lista_page.dart';
 import 'package:provider/provider.dart';
 import '../Controllers/tarea_controller.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class InicioPage extends StatelessWidget {
   InicioPage({Key? key}) : super(key: key);
@@ -56,7 +59,104 @@ class InicioPage extends StatelessWidget {
             Flexible(
               child: IconButton(
                 tooltip: 'Agregar tarea',
-                onPressed: () {},
+                onPressed: () {
+                  //mostrar dialogo
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      final nombreController = TextEditingController();
+                      final descripcionController = TextEditingController();
+                      final colorController = TextEditingController();
+                      return AlertDialog(
+                        title: const Text('Agregar tarea'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              controller: nombreController,
+                              decoration: const InputDecoration(
+                                hintText: 'Nombre',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            TextField(
+                              controller: descripcionController,
+                              decoration: const InputDecoration(
+                                hintText: 'Descripción',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            //Usar el color picker
+                            TextField(
+                              controller: colorController,
+                              decoration: const InputDecoration(
+                                hintText: 'Color',
+                                border: OutlineInputBorder(),
+                              ),
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Color'),
+                                      content: SingleChildScrollView(
+                                        child: BlockPicker(
+                                          pickerColor: Colors.white,
+                                          onColorChanged: (color) {
+                                            colorController.text =
+                                                color.value.toString();
+                                          },
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Cancelar'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Aceptar'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              tareaController.tareas = [
+                                ...tareaController.tareas,
+                                TareaModel(
+                                  nombre: nombreController.text,
+                                  descripcion: descripcionController.text,
+                                  color: Color(int.parse(colorController.text)),
+                                ),
+                              ];
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Agregar'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 icon: const Icon(Icons.add),
               ),
             ),
@@ -68,104 +168,6 @@ class InicioPage extends StatelessWidget {
         else
           Expanded(child: VistaCuadricula(tareas: tareas)),
       ],
-    );
-  }
-}
-
-class VistaLista extends StatelessWidget {
-  const VistaLista({
-    Key? key,
-    required this.tareas,
-  }) : super(key: key);
-
-  final List<TareaModel> tareas;
-
-  @override
-  Widget build(BuildContext context) {
-    final tareaController = Provider.of<TareaController>(context);
-    return ListView.builder(
-      key: const PageStorageKey('VistaLista'),
-      itemCount: tareas.length,
-      itemBuilder: (context, index) {
-        final tarea = tareas[index];
-
-        return ListTile(
-          title: Text(tarea.nombre),
-          subtitle: Text(tarea.descripcion),
-          leading: CircleAvatar(
-            backgroundColor: tarea.color,
-          ),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              tareaController.removeTarea(tarea);
-            },
-          ),
-        );
-      },
-    );
-  }
-}
-
-class VistaCuadricula extends StatelessWidget {
-  const VistaCuadricula({
-    Key? key,
-    required this.tareas,
-  }) : super(key: key);
-
-  final List<TareaModel> tareas;
-
-  @override
-  Widget build(BuildContext context) {
-    final tareaController = Provider.of<TareaController>(context);
-    return LayoutBuilder(
-      key: const PageStorageKey('VistaCuadricula'),
-      builder: (context, constraints) {
-        final crossAxisCount = constraints.maxWidth >= 600 ? 3 : 2;
-
-        return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            childAspectRatio: 1.0,
-          ),
-          itemCount: tareas.length,
-          itemBuilder: (context, index) {
-            final tarea = tareas[index];
-            return GestureDetector(
-              onTap: null,
-              child: Card(
-                color: tarea.color,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 8.0),
-                    Text(
-                      tarea.nombre,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4.0),
-                    Text(tarea.descripcion),
-                    const SizedBox(height: 8.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            tareaController.removeTarea(tarea);
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }
